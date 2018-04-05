@@ -1074,7 +1074,8 @@ void ChatDlg::updateIsComposing(bool b)
 
 void ChatDlg::setChatState(ChatState state)
 {
-    if (PsiOptions::instance()->getOption("options.messages.send-composing-events").toBool() && (sendComposingEvents_ || (contactChatState_ != XMPP::StateNone))) {
+    bool sendAtStart = PsiOptions::instance()->getOption("options.messages.send-composing-events-at-start").toBool();
+    if (PsiOptions::instance()->getOption("options.messages.send-composing-events").toBool() && (sendAtStart || sendComposingEvents_ || (contactChatState_ != XMPP::StateNone))) {
         // Don't send to offline resource
         QList<UserListItem*> ul = account()->findRelevant(jid());
         if (ul.isEmpty()) {
@@ -1118,7 +1119,7 @@ void ChatDlg::setChatState(ChatState state)
                     m.addEvent(CancelEvent);
                 }
             }
-            if (contactChatState_ != XMPP::StateNone) {
+            if (contactChatState_ != XMPP::StateNone || sendAtStart) {
                 if (lastChatState_ != XMPP::StateGone) {
                     if ((state == XMPP::StateInactive && lastChatState_ == XMPP::StateComposing) || (state == XMPP::StateComposing && lastChatState_ == XMPP::StateInactive)) {
                         // First go to the paused state
@@ -1134,7 +1135,7 @@ void ChatDlg::setChatState(ChatState state)
             }
 
             // Send event message
-            if (m.containsEvents() || m.chatState() != XMPP::StateNone) {
+            if (m.containsEvents() || m.chatState() != XMPP::StateNone || sendAtStart) {
                 m.setType("chat");
                 if (account()->isAvailable()) {
                     account()->dj_sendMessage(m, false);
