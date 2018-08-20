@@ -264,7 +264,7 @@ void MUCJoinDlg::doJoin(PsiAccount::MucJoinReason r)
 
 
     if (!account_->groupChatJoin(host, room, nick, pass, !ui_.ck_history->isChecked())) {
-        QMessageBox::information(this, tr("Error"), tr("You are in or joining this room already!"));
+//        QMessageBox::information(this, tr("Error"), tr("You are in or joining this room already!"));
         return;
     }
 

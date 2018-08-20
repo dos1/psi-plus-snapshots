@@ -1680,7 +1680,7 @@ void GCMainDlg::goConn()
         QString nick = d->self;
 
         if(!account()->groupChatJoin(host, room, nick, d->password)) {
-            appendSysMsg(tr("Error: You are in or joining this room already!"), true);
+//            appendSysMsg(tr("Error: You are in or joining this room already!"), true);
             d->state = Private::Idle;
         }
     }
